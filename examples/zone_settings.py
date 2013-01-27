@@ -21,9 +21,9 @@
 
 '''
 
-    Trivial example of how to get domain stats from CloudFlare. See:
+    Trivial example of how to get settings for a zone. See:
     
-    http://www.cloudflare.com/docs/client-api.html#s3.1
+    http://www.cloudflare.com/docs/client-api.html#s3.7
 
 '''
 
@@ -47,25 +47,27 @@ def got_response(response):
     '''
     print '< got a response'
     for s in response.data:
-        print s
+        for k,v in s.items():
+            print k, '->', v
     reactor.stop()
 
-def got_error(response):
+def got_error(error):
     '''
-        'response' is a txcloudflare.response.Response() instance.
+        'error' is a twisted.python.failure.Failure() instance wrapping a
+        txcloudflare.response.Response() instance.
     '''
     print '< error'
-    print response.error_code
-    print response.error_message
+    print error.printTraceback()
     reactor.stop()
 
 email_address = os.environ.get('TXCFEMAIL', '')
 api_token = os.environ.get('TXCFAPI', '')
+domain_name = os.environ.get('TXCFDOMAIN', '')
 
 if __name__ == '__main__':
-    print '> listing all domains'
+    print '> getting zone settings for: {0}'.format(domain_name)
     cloudflare = txcloudflare.api(email_address, api_token)
-    cloudflare.zone_load_multi().addCallback(got_response).addErrback(got_error)
+    cloudflare.zone_settings(zone=domain_name).addCallback(got_response).addErrback(got_error)
     reactor.run()
 
 '''

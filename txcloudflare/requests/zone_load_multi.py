@@ -20,14 +20,16 @@
 
 '''
 
-    Domain stats API request. See: http://www.cloudflare.com/docs/client-api.html#s3.1
+    List all zones on an account. See:
+    
+    http://www.cloudflare.com/docs/client-api.html#s3.2
 
 '''
 
 from txcloudflare.request import HttpRequest
 from txcloudflare.errors import RequestValidationException
 
-class StatsRequest(HttpRequest):
+class ListAllZonesRequest(HttpRequest):
     
     ACTION = 'zone_load_multi'
     METHOD = 'POST'
@@ -41,7 +43,7 @@ class StatsRequest(HttpRequest):
     def post_process(self, data):
         return data.get('zones', {}).get('objs', [])
 
-api_request = StatsRequest
+api_request = ListAllZonesRequest
 
 '''
 

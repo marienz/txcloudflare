@@ -21,6 +21,26 @@
 __all__ = [
     'stats',
     'zone_load_multi',
+    'rec_load_all',
+    'zone_check',
+    'zone_ips',
+    'ip_lkup',
+    'zone_settings',
+    'sec_lvl',
+    'cache_lvl',
+    'devmode',
+    'fpurge_ts',
+    'zone_file_purge',
+    'zone_grab',
+    'wl',
+    'ban',
+    'nul',
+    'ipv46',
+    'async',
+    'minify',
+    'rec_new',
+    'rec_edit',
+    'rec_delete',
 ]
 
 '''

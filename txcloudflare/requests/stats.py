@@ -20,7 +20,9 @@
 
 '''
 
-    Domain stats API request. See: http://www.cloudflare.com/docs/client-api.html#s3.1
+    Get the statistics for a zone. See:
+    
+    http://www.cloudflare.com/docs/client-api.html#s3.1
 
 '''
 

@@ -60,7 +60,7 @@ class Parser(object):
         self.response.error = False if self.response.success else True
         if self.response.error:
             self.response.error_code = self.response.json.get('err_code', '')
-            self.error_message.msg = self.response.json.get('msg', '')
+            self.response.error_message = self.response.json.get('msg', '')
     
     def check_data(self):
         self.response.data = self.response.json.get('response', {})

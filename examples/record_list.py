@@ -21,9 +21,9 @@
 
 '''
 
-    Trivial example of how to get domain stats from CloudFlare. See:
+    Trivial example of how to list all records for a domain. See:
     
-    http://www.cloudflare.com/docs/client-api.html#s3.1
+    http://www.cloudflare.com/docs/client-api.html#s3.3
 
 '''
 
@@ -46,17 +46,17 @@ def got_response(response):
         'response' is a txcloudflare.response.Response() instance.
     '''
     print '< got a response'
-    for s in response.data:
-        print s
+    for d in response.data:
+        print d['type'], d['name'], d['display_content']
     reactor.stop()
 
-def got_error(response):
+def got_error(error):
     '''
-        'response' is a txcloudflare.response.Response() instance.
+        'error' is a twisted.python.failure.Failure() instance wrapping a
+        txcloudflare.response.Response() instance.
     '''
     print '< error'
-    print response.error_code
-    print response.error_message
+    print error.printTraceback()
     reactor.stop()
 
 email_address = os.environ.get('TXCFEMAIL', '')
@@ -64,9 +64,9 @@ api_token = os.environ.get('TXCFAPI', '')
 domain_name = os.environ.get('TXCFDOMAIN', '')
 
 if __name__ == '__main__':
-    print '> getting domain stats for: {0}'.format(domain_name)
+    print '> listing all records for zone: {0}'.format(domain_name)
     cloudflare = txcloudflare.api(email_address, api_token)
-    cloudflare.stats(zone=domain_name, hours=24).addCallback(got_response).addErrback(got_error)
+    cloudflare.rec_load_all(zone=domain_name).addCallback(got_response).addErrback(got_error)
     reactor.run()
 
 '''

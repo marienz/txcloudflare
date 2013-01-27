@@ -45,7 +45,7 @@ class HttpStreamReceiver(Protocol):
         self.response = Parser(self.response).get_parsed()
         self.response.data = self.response.request.post_process(self.response.data)
         if self.response.error:
-            self.d.errback(self.response)
+            self.d.errback('{0} - {1}'.format(self.response.error_code, self.response.error_message))
         else:
             self.d.callback(self.response)
 
@@ -110,12 +110,15 @@ class HttpRequest(object):
     
     def validate(self):
         for p in self.REQUIRED_PARAMS:
-            z = self.inverse_map.get(p, None)
+            z = self.inverse_map.get(p, p)
             if p not in self.params:
                 raise RequestValidationException('request "{0}" requires parameter: {1})'.format(self.request_name, z))
                 return False
         for k,v in self.params.items():
-            f = self.REQUIRED_PARAMS.get(k)
+            if k in self.REQUIRED_PARAMS:
+                f = self.REQUIRED_PARAMS[k]
+            else:
+                f = self.OPTIONAL_PARAMS[k]
             try:
                 self.params[k] = f(v)
             except:
@@ -134,6 +137,8 @@ class HttpRequest(object):
             api_key = self.PARAM_MAP.get(param_key, None)
             if api_key in self.REQUIRED_PARAMS or api_key in self.OPTIONAL_PARAMS:
                 self.params[api_key] = param_val
+            elif param_key in self.REQUIRED_PARAMS or param_key in self.OPTIONAL_PARAMS:
+                self.params[param_key] = param_val
         self.validate()
         self.params = self.pre_process(self.params)
         return self.go()
