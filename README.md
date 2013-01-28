@@ -28,6 +28,12 @@ directly from github:
 $ pip install git+git://github.com/meeb/txcloudflare.git@master
 ```
 
+Or you can install it manually:
+
+```bash
+$ python setup.py install
+```
+
 Please do report, fork or otherwise notify me of any bugs or issues.
 
 CloudFlare host API support may be added if there is demand for it.
