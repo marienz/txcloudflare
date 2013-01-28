@@ -38,6 +38,34 @@ class RequestValidationException(Exception):
     
     '''
 
+class ApiInvalidAuthException(Exception):
+    '''
+    
+        Raised when the API request returns an E_UNAUTH error (authentication details were invalid).
+    
+    '''
+
+class ApiInvalidInputException(Exception):
+    '''
+    
+        Raised when the API request returns an E_INVLDINPUT error (some other part of the request was invalid).
+    
+    '''
+
+class ApiExceededLimitException(Exception):
+    '''
+    
+        Raised when the API request returns an E_MAXAPI error (exceeded API request limits).
+    
+    '''
+
+class ApiResponseException(Exception):
+    '''
+    
+        Raised when the API request returns any other error code.
+    
+    '''
+
 '''
 
     EOF

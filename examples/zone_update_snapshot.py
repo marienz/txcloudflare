@@ -21,9 +21,12 @@
 
 '''
 
-    Trivial example of how to get statistics for a zone. See:
+    Trivial example of how to request CloudFlare to update their snapshot image
+    if a site. As this uses the internal zone IDs (that need to be resolved with
+    zone_check() first) this is a chained double-lookup example to show it using
+    a zone name. See:
     
-    http://www.cloudflare.com/docs/client-api.html#s3.1
+    http://www.cloudflare.com/docs/client-api.html#s4.6
 
 '''
 
@@ -41,15 +44,28 @@ except ImportError:
 from twisted.internet import reactor
 import txcloudflare
 
-def got_response(response):
+# shuffle these up a bit in this example to increase their scope
+email_address = os.environ.get('TXCFEMAIL', '')
+api_token = os.environ.get('TXCFAPI', '')
+domain_name = os.environ.get('TXCFDOMAIN', '')
+cloudflare = txcloudflare.client_api(email_address, api_token)
+
+def got_zone_id(response):
     '''
         'response' is a txcloudflare.response.Response() instance.
     '''
-    print '< got a response'
-    for s in response.data:
-        for k,v in s.items():
-            print k, '->', v
-    reactor.stop()
+    print '< got first response (zone id lookup)'
+    zone_id = response.data.get(domain_name, '')
+    print '< zone {0} has zone id {1}'.format(domain_name, zone_id)
+    print '> requesting snapshot update for zone:', zone_id
+    
+    def updated_snapshot(response):
+        print '< got second response (updated snapshot)'
+        print response.data
+        reactor.stop()
+    
+    # send the second request now we have the zone id
+    cloudflare.zone_grab(zone_id=zone_id).addCallback(updated_snapshot).addErrback(got_error)
 
 def got_error(error):
     '''
@@ -63,14 +79,11 @@ def got_error(error):
     print error.printTraceback()
     reactor.stop()
 
-email_address = os.environ.get('TXCFEMAIL', '')
-api_token = os.environ.get('TXCFAPI', '')
-domain_name = os.environ.get('TXCFDOMAIN', '')
+
 
 if __name__ == '__main__':
-    print '> getting zone stats for: {0}'.format(domain_name)
-    cloudflare = txcloudflare.client_api(email_address, api_token)
-    cloudflare.stats(zone=domain_name, hours=24).addCallback(got_response).addErrback(got_error)
+    print '> listing zone ids for: {0}'.format(domain_name)
+    cloudflare.zone_check(zones=[domain_name]).addCallback(got_zone_id).addErrback(got_error)
     reactor.run()
 
 '''

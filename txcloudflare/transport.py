@@ -38,7 +38,7 @@ from twisted.internet.defer import succeed
 
 import txcloudflare, txcloudflare.requests
 from txcloudflare.parse import Parser
-from txcloudflare.errors import TransportException
+from txcloudflare.errors import *
 
 # try and import the verifying SSL context from txverifyssl
 try:
@@ -72,6 +72,7 @@ class HttpTransport(TransportBase):
     TRANSPORT_SCHEME = ''
     TRANSPORT_NETLOC = ''
     TRANSPORT_URI = ''
+    API_RESPONSE_EXCEPTIONS = {}
     METHOD_GET = 'GET'
     METHOD_POST = 'POST'
     METHOD_PUT = 'PUT'
@@ -161,7 +162,8 @@ class HttpStreamReceiver(protocol.Protocol):
     
     '''
     
-    def __init__(self, response, d):
+    def __init__(self, request, response, d):
+        self.request = request
         self.response = response
         self.d = d
     
@@ -169,10 +171,14 @@ class HttpStreamReceiver(protocol.Protocol):
         self.response.raw_data += data
     
     def connectionLost(self, reason):
+        # on connection lost we can assume we have connected to the API and got
+        # a reply of some kind, time to fire off our request callback and parse
+        # the response
         self.response = Parser(self.response).get_parsed()
         self.response.data = self.response.request.post_process(self.response.data)
         if self.response.error:
-            self.d.errback('{0} - {1}'.format(self.response.error_code, self.response.error_message))
+            e = self.request.transport.API_RESPONSE_EXCEPTIONS.get(self.response.error_code, ApiResponseException)
+            self.d.errback(e(self.response.error_code, self.response.error_message, self.response))
         else:
             self.d.callback(self.response)
 
@@ -186,6 +192,11 @@ class CloudFlareClientTransport(HttpTransport):
     TRANSPORT_SCHEME = 'https'
     TRANSPORT_NETLOC = 'www.cloudflare.com'
     TRANSPORT_URI = 'api_json.html'
+    API_RESPONSE_EXCEPTIONS = {
+        'E_UNAUTH': ApiInvalidAuthException,
+        'E_INVLDINPUT': ApiInvalidInputException,
+        'E_MAXAPI': ApiExceededLimitException,
+    }
     
     def __init__(self, email_address='', api_token=''):
         self.email_address = email_address

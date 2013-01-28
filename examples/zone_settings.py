@@ -53,8 +53,11 @@ def got_response(response):
 
 def got_error(error):
     '''
-        'error' is a twisted.python.failure.Failure() instance wrapping a
-        txcloudflare.response.Response() instance.
+        'error' is a twisted.python.failure.Failure() instance wrapping one of
+        the exceptions in txcloudflare.errors. The exceptions return the
+        CloudFlare error code, a plain text string, the request object that
+        generated the error (txcloudflare.request.Request) and a response object
+        (txcloudflare.response.Response).
     '''
     print '< error'
     print error.printTraceback()

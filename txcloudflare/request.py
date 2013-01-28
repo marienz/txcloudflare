@@ -27,10 +27,11 @@
 from urlparse import urlunsplit
 
 from twisted.internet import defer
+from twisted.python.failure import Failure
 
 from txcloudflare.transport import HttpStreamReceiver
 from txcloudflare.parse import Response
-from txcloudflare.errors import RequestValidationException
+from txcloudflare.errors import RequestValidationException, TransportException
 
 class HttpRequest(object):
     '''
@@ -84,12 +85,17 @@ class HttpRequest(object):
         return self.d
     
     def _got_reply(self, r):
-        # this means we got a twisted.web._newclient.Response object which is
-        # the start of a stream
-        response = Response()
-        response.request = self
-        response.raw_headers = list(r.headers.getAllRawHeaders())
-        r.deliverBody(HttpStreamReceiver(response, self.d))
+        # this means we got a twisted.web._newclient.Response object or a 
+        # twisted.python.failure.Failure object. Response() is the start of an
+        # HTTP stream, Failure() means there was a transport error connecting
+        # to the API
+        if isinstance(r, Failure):
+            self.d.errback(TransportException(r))
+        else:
+            response = Response()
+            response.request = self
+            response.raw_headers = list(r.headers.getAllRawHeaders())
+            r.deliverBody(HttpStreamReceiver(self, response, self.d))
     
     def validate(self):
         for p in self.REQUIRED_PARAMS:
