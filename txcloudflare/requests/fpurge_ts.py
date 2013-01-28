@@ -29,7 +29,7 @@
 from txcloudflare.request import HttpRequest
 from txcloudflare.errors import RequestValidationException
 
-class PurgeCacheZoneRequest(HttpRequest):
+class PurgeZoneCacheRequest(HttpRequest):
     
     ACTION = 'fpurge_ts'
     METHOD = 'POST'
@@ -48,7 +48,7 @@ class PurgeCacheZoneRequest(HttpRequest):
     def post_process(self, data):
         return data
 
-api_request = PurgeCacheZoneRequest
+api_request = PurgeZoneCacheRequest
 
 '''
 

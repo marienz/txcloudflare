@@ -32,6 +32,9 @@ from transport import CloudFlareClientTransport
 def client_api(email, token):
     return CloudFlareClientTransport(email, token)
 
+#def host_api(email, token):
+#    return 'coming soon?! maybe'
+
 '''
 
     EOF

@@ -31,7 +31,7 @@ from urlparse import urlsplit
 from txcloudflare.request import HttpRequest
 from txcloudflare.errors import RequestValidationException
 
-class PurgeCacheFileRequest(HttpRequest):
+class PurgeFileCacheRequest(HttpRequest):
     
     ACTION = 'zone_file_purge'
     METHOD = 'POST'
@@ -55,7 +55,7 @@ class PurgeCacheFileRequest(HttpRequest):
     def post_process(self, data):
         return data
 
-api_request = PurgeCacheFileRequest
+api_request = PurgeFileCacheRequest
 
 '''
 

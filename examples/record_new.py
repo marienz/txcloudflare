@@ -45,7 +45,7 @@ def got_response(response):
     '''
         'response' is a txcloudflare.response.Response() instance.
     '''
-    print '< got a response'
+    print '< got a response (done)'
     for k,v in response.data.items():
         print k, '->', v
     reactor.stop()
@@ -77,7 +77,7 @@ if __name__ == '__main__':
     # cloudflare.rec_new() parameters here are:
     #   zone                the domain name (required)
     #   record_type         one of A/CNAME/MX/TXT/SPF/AAAA/NS/SRV/LOC (required)
-    #   name                name of subdomain (required), use @ for root
+    #   name                name of subdomain, use @ for root (required)
     #   content             content of the DNS record (required)
     #   ttl                 TTL of the DNS record in seconds, between 120 and 4,294,967,295, 1 for automatic (required)
     #   priority            priority of DNS record, only works with a record_type of MX or SRV

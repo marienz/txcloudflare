@@ -20,7 +20,8 @@
 
 '''
 
-    Classes used to format requests properly.
+    Classes used to format requests properly. Properly formatted requests then
+    use a transport to connect to the API and send the response on to a parser.
 
 '''
 
@@ -33,11 +34,21 @@ from txcloudflare.transport import HttpStreamReceiver
 from txcloudflare.parse import Response
 from txcloudflare.errors import RequestValidationException, TransportException
 
-class HttpRequest(object):
+class Request(object):
     '''
     
-        A base HTTP request providing some simple validation for requests as
-        well as generating the required paramters for the transport.
+        The request base class.
+    
+    '''
+    
+    def go(self, *a, **k):
+        raise TransportException('go() must be overridden')
+
+class HttpRequest(Request):
+    '''
+    
+        An HTTP request providing some simple validation for requests as well as
+        generating the required paramters for the transport.
     
     '''
     
@@ -88,7 +99,7 @@ class HttpRequest(object):
         # this means we got a twisted.web._newclient.Response object or a 
         # twisted.python.failure.Failure object. Response() is the start of an
         # HTTP stream, Failure() means there was a transport error connecting
-        # to the API
+        # to the API (DNS resolution error, socket connection error, etc.)
         if isinstance(r, Failure):
             self.d.errback(TransportException(r))
         else:
@@ -116,9 +127,11 @@ class HttpRequest(object):
         return True
     
     def pre_process(self, params):
+        # pre-process the request parameters, overriden in child requests
         return params
     
     def post_process(self, data):
+        # post process the returned JSON, now in a dict, overriden in child requests
         return data
     
     def __call__(self, *a, **k):

@@ -40,7 +40,7 @@ class SetIpv46Request(HttpRequest):
     OPTIONAL_PARAMS = {}
     PARAM_MAP = {
         'zone': 'z',
-        'on': 'v',
+        'ipv6_on': 'v',
     }
     
     def pre_process(self, params):

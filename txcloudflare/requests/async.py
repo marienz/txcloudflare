@@ -29,7 +29,7 @@
 from txcloudflare.request import HttpRequest
 from txcloudflare.errors import RequestValidationException
 
-class SetCacheLevelRequest(HttpRequest):
+class SetAsyncRocketLoaderRequest(HttpRequest):
     
     ACTION = 'async'
     METHOD = 'POST'
@@ -59,7 +59,7 @@ class SetCacheLevelRequest(HttpRequest):
     def post_process(self, data):
         return data
 
-api_request = SetCacheLevelRequest
+api_request = SetAsyncRocketLoaderRequest
 
 '''
 

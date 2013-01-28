@@ -45,7 +45,7 @@ def got_response(response):
     '''
         'response' is a txcloudflare.response.Response() instance.
     '''
-    print '< got a response'
+    print '< got a response (done)'
     reactor.stop()
 
 def got_error(error):
@@ -67,6 +67,7 @@ domain_name = os.environ.get('TXCFDOMAIN', '')
 if __name__ == '__main__':
     print '> setting async rocket loader to automatic for zone: {0}'.format(domain_name)
     cloudflare = txcloudflare.client_api(email_address, api_token)
+    # level is one of [off / automatic / manual]
     cloudflare.async(zone=domain_name, level='off').addCallback(got_response).addErrback(got_error)
     reactor.run()
 

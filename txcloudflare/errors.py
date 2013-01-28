@@ -20,7 +20,8 @@
 
 '''
 
-    Contains the custom exceptions that can be raised.
+    Contains the custom exceptions that can be raised during api request
+    validation, transport and parsing.
 
 '''
 

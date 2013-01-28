@@ -45,7 +45,7 @@ def got_response(response):
     '''
         'response' is a txcloudflare.response.Response() instance.
     '''
-    print '< got a response'
+    print '< got a response (done)'
     for d in response.data:
         print d['zone_name']
     reactor.stop()

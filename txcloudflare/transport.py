@@ -58,7 +58,7 @@ class TransportBase(object):
     '''
     
     def do_request(self, *a, **k):
-        raise TransportException('do_request must be overridden')
+        raise TransportException('do_request() must be overridden')
 
 class HttpTransport(TransportBase):
     '''
@@ -205,6 +205,7 @@ class CloudFlareClientTransport(HttpTransport):
             raise TransportException('email_address parametermust be set')
         if not self.api_token:
             raise TransportException('api_token parameter must be set')
+        # dynamically load all the child requests
         for r in txcloudflare.requests.__all__:
             __import__('txcloudflare.requests.{0}'.format(r))
     

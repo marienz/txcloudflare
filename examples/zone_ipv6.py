@@ -45,7 +45,7 @@ def got_response(response):
     '''
         'response' is a txcloudflare.response.Response() instance.
     '''
-    print '< got a response'
+    print '< got a response (done)'
     reactor.stop()
 
 def got_error(error):
@@ -67,7 +67,7 @@ domain_name = os.environ.get('TXCFDOMAIN', '')
 if __name__ == '__main__':
     print '> turning on ipv6 support for zone: {0}'.format(domain_name)
     cloudflare = txcloudflare.client_api(email_address, api_token)
-    cloudflare.ipv46(zone=domain_name, on=True).addCallback(got_response).addErrback(got_error)
+    cloudflare.ipv46(zone=domain_name, ipv6_on=True).addCallback(got_response).addErrback(got_error)
     reactor.run()
 
 '''

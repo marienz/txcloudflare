@@ -69,13 +69,13 @@ def got_record_list(response):
         reactor.stop()
     
     if target:
-        # send the second request now we have the record id - parameters here other
-        # than 'id' are the same as for rec_new, see record_new.py for example
+        # send the second request now we have the record id - parameters for rec_edit() other
+        # than 'id' are the same as for rec_new, see examples/record_new.py for details
         update_to = 'mx.differentserver.com'
         print '> requesting update of "{0}" record "{1}" changing to "{2}" id: {3}'.format(target['type'], target['name'], update_to, target['rec_id'])
         cloudflare.rec_edit(
             zone=domain_name,
-            record_id=target['rec_id'],
+            record_id=target['rec_id'], # only new parameter
             name=target['name'],
             record_type=target['type'],
             ttl=target['ttl'],

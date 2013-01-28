@@ -69,9 +69,7 @@ class Parser(object):
 class Response(object):
     '''
     
-        A generic and sane container for response information. Provides basic
-        validation to test if the request completed successfully with naive
-        string checks.
+        A generic and sane container for response information.
     
     '''
     

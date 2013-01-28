@@ -21,7 +21,7 @@
 
 '''
 
-    Trivial example of how to unban/whitelist an IP. See:
+    Trivial example of how to whitelist an IP. See:
     
     http://www.cloudflare.com/docs/client-api.html#s4.7
 
@@ -45,7 +45,7 @@ def got_response(response):
     '''
         'response' is a txcloudflare.response.Response() instance.
     '''
-    print '< got a response'
+    print '< got a response (done)'
     print '< ip: {0}'.format(response.data.get('ip', ''))
     print '< action: {0}'.format(response.data.get('action', ''))
     reactor.stop()

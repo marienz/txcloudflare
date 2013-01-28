@@ -29,7 +29,7 @@
 from txcloudflare.request import HttpRequest
 from txcloudflare.errors import RequestValidationException
 
-class ZonesWithIdRequest(HttpRequest):
+class UpdateSiteSnapshotRequest(HttpRequest):
     
     ACTION = 'zone_grab'
     METHOD = 'POST'
@@ -47,7 +47,7 @@ class ZonesWithIdRequest(HttpRequest):
     def post_process(self, data):
         return data
 
-api_request = ZonesWithIdRequest
+api_request = UpdateSiteSnapshotRequest
 
 '''
 

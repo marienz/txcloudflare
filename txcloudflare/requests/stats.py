@@ -29,7 +29,7 @@
 from txcloudflare.request import HttpRequest
 from txcloudflare.errors import RequestValidationException
 
-class StatsRequest(HttpRequest):
+class ZoneStatsRequest(HttpRequest):
     
     ACTION = 'stats'
     METHOD = 'POST'
@@ -62,7 +62,7 @@ class StatsRequest(HttpRequest):
     def post_process(self, data):
         return data.get('result', {}).get('objs', [])
 
-api_request = StatsRequest
+api_request = ZoneStatsRequest
 
 '''
 

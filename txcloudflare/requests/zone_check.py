@@ -29,7 +29,7 @@
 from txcloudflare.request import HttpRequest
 from txcloudflare.errors import RequestValidationException
 
-class ZonesWithIdRequest(HttpRequest):
+class ListZonesWithIdRequest(HttpRequest):
     
     ACTION = 'zone_check'
     METHOD = 'POST'
@@ -46,7 +46,7 @@ class ZonesWithIdRequest(HttpRequest):
     def post_process(self, data):
         return data.get('zones', {})
 
-api_request = ZonesWithIdRequest
+api_request = ListZonesWithIdRequest
 
 '''
 
