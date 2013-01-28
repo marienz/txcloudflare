@@ -68,7 +68,7 @@ class HttpTransport(TransportBase):
     
     '''
     
-    UA = 'txcloudflare v'
+    UA = 'txcloudflare'
     TRANSPORT_SCHEME = ''
     TRANSPORT_NETLOC = ''
     TRANSPORT_URI = ''
@@ -120,7 +120,7 @@ class HttpTransport(TransportBase):
         #print 'data:', post_data
         
         producer = HttpStreamProducer(urlencode(OrderedDict(post_data))) if post_data else None
-        request_headers = {'User-Agent': [self.UA + txcloudflare.__version__]}
+        request_headers = {'User-Agent': [self.UA + ' v' + txcloudflare.__version__]}
         if method == self.METHOD_POST:
             request_headers['Content-Type'] = ['application/x-www-form-urlencoded']
         return agent.request(method, url, Headers(request_headers), producer)
@@ -134,7 +134,7 @@ class HttpTransport(TransportBase):
 class HttpStreamProducer(object):
     '''
     
-        Generates an stream of data on request to send to the remote HTTP
+        Produces an stream of data on request to send to the remote HTTP
         server. This is used to encode and send HTTP POST data.
     
     '''
@@ -158,7 +158,7 @@ class HttpStreamProducer(object):
 class HttpStreamReceiver(protocol.Protocol):
     '''
     
-        Receives the downstream data from an HTTP connection.
+        Receives the downstream data from an HTTP connection in chunks.
     
     '''
     
