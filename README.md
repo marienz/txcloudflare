@@ -26,7 +26,7 @@ directly from github:
 
 ```bash
 $ pip install git+git://github.com/meeb/txcloudflare.git@master
-```txcloudflare
+```
 
 Please do report, fork or otherwise notify me of any bugs or issues.
 
