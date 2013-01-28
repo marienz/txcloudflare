@@ -54,9 +54,9 @@ def got_error(error):
     '''
         'error' is a twisted.python.failure.Failure() instance wrapping one of
         the exceptions in txcloudflare.errors. The exceptions return the
-        CloudFlare error code, a plain text string, the request object that
-        generated the error (txcloudflare.request.Request) and a response object
-        (txcloudflare.response.Response).
+        CloudFlare error code, a plain text string and a response object
+        (txcloudflare.response.Response). The response object has a 'request'
+        parameter if you need to look at the reques that generated the error.
     '''
     print '< error'
     print error.printTraceback()
