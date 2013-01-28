@@ -18,23 +18,37 @@
 
 '''
 
-__version__ = '1.0'
+'''
 
-__all__ = [
-    'errors',
-    'parse',
-    'request',
-    'requests',
-    'transport',
-]
+    Purge the cache for a zone. See:
+    
+    http://www.cloudflare.com/docs/client-api.html#s4.4
 
-from transport import CloudFlareClientTransport
+'''
 
-def client_api(email, token):
-    return CloudFlareClientTransport(email, token)
+from txcloudflare.request import HttpRequest
+from txcloudflare.errors import RequestValidationException
 
-#def host_api(email, token):
-#    return 'coming soon?! maybe'
+class PurgeZoneCacheRequest(HttpRequest):
+    
+    ACTION = 'fpurge_ts'
+    METHOD = 'POST'
+    REQUIRED_PARAMS = {
+        'z': str,
+    }
+    OPTIONAL_PARAMS = {}
+    PARAM_MAP = {
+        'zone': 'z',
+    }
+    
+    def pre_process(self, params):
+        params['v'] = 1
+        return params
+    
+    def post_process(self, data):
+        return data
+
+api_request = PurgeZoneCacheRequest
 
 '''
 

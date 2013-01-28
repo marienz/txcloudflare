@@ -18,23 +18,36 @@
 
 '''
 
-__version__ = '1.0'
+'''
 
-__all__ = [
-    'errors',
-    'parse',
-    'request',
-    'requests',
-    'transport',
-]
+    Null an IP. See:
+    
+    http://www.cloudflare.com/docs/client-api.html#s4.7
 
-from transport import CloudFlareClientTransport
+'''
 
-def client_api(email, token):
-    return CloudFlareClientTransport(email, token)
+from txcloudflare.request import HttpRequest
+from txcloudflare.errors import RequestValidationException
 
-#def host_api(email, token):
-#    return 'coming soon?! maybe'
+class IpNullRequest(HttpRequest):
+    
+    ACTION = 'nul'
+    METHOD = 'POST'
+    REQUIRED_PARAMS = {
+        'key': str,
+    }
+    OPTIONAL_PARAMS = {}
+    PARAM_MAP = {
+        'ip': 'key',
+    }
+    
+    def pre_process(self, params):
+        return params
+    
+    def post_process(self, data):
+        return data.get('result', {})
+
+api_request = IpNullRequest
 
 '''
 

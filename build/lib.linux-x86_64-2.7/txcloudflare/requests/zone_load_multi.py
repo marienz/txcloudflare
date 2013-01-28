@@ -18,23 +18,32 @@
 
 '''
 
-__version__ = '1.0'
+'''
 
-__all__ = [
-    'errors',
-    'parse',
-    'request',
-    'requests',
-    'transport',
-]
+    List all zones on an account. See:
+    
+    http://www.cloudflare.com/docs/client-api.html#s3.2
 
-from transport import CloudFlareClientTransport
+'''
 
-def client_api(email, token):
-    return CloudFlareClientTransport(email, token)
+from txcloudflare.request import HttpRequest
+from txcloudflare.errors import RequestValidationException
 
-#def host_api(email, token):
-#    return 'coming soon?! maybe'
+class ListAllZonesRequest(HttpRequest):
+    
+    ACTION = 'zone_load_multi'
+    METHOD = 'POST'
+    REQUIRED_PARAMS = {}
+    OPTIONAL_PARAMS = {}
+    PARAM_MAP = {}
+    
+    def pre_process(self, params):
+        return params
+    
+    def post_process(self, data):
+        return data.get('zones', {}).get('objs', [])
+
+api_request = ListAllZonesRequest
 
 '''
 

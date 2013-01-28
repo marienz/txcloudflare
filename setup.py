@@ -17,7 +17,7 @@
 '''
 
 from setuptools import setup, find_packages
-from txcloudfiles import __version__
+from txcloudflare import __version__
 
 setup(
     name='txcloudflare',
@@ -29,7 +29,7 @@ setup(
     author_email='j@m.pr',
     packages=find_packages(),
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 5 - Production/Stable',
         'License :: OSI Approved :: Apache Software License',
         'Intended Audience :: Developers',
         'Programming Language :: Python',

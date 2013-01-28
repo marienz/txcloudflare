@@ -18,23 +18,36 @@
 
 '''
 
-__version__ = '1.0'
+'''
 
-__all__ = [
-    'errors',
-    'parse',
-    'request',
-    'requests',
-    'transport',
-]
+    List all records for a domain. See:
+    
+    http://www.cloudflare.com/docs/client-api.html#s3.3
 
-from transport import CloudFlareClientTransport
+'''
 
-def client_api(email, token):
-    return CloudFlareClientTransport(email, token)
+from txcloudflare.request import HttpRequest
+from txcloudflare.errors import RequestValidationException
 
-#def host_api(email, token):
-#    return 'coming soon?! maybe'
+class StatsRequest(HttpRequest):
+    
+    ACTION = 'rec_load_all'
+    METHOD = 'POST'
+    REQUIRED_PARAMS = {
+        'z': str,
+    }
+    OPTIONAL_PARAMS = {}
+    PARAM_MAP = {
+        'zone': 'z',
+    }
+    
+    def pre_process(self, params):
+        return params
+    
+    def post_process(self, data):
+        return data.get('recs', {}).get('objs', [])
+
+api_request = StatsRequest
 
 '''
 

@@ -18,23 +18,36 @@
 
 '''
 
-__version__ = '1.0'
+'''
 
-__all__ = [
-    'errors',
-    'parse',
-    'request',
-    'requests',
-    'transport',
-]
+    Get the settings for a zone. See:
+    
+    http://www.cloudflare.com/docs/client-api.html#s3.7
 
-from transport import CloudFlareClientTransport
+'''
 
-def client_api(email, token):
-    return CloudFlareClientTransport(email, token)
+from txcloudflare.request import HttpRequest
+from txcloudflare.errors import RequestValidationException
 
-#def host_api(email, token):
-#    return 'coming soon?! maybe'
+class ZoneSettingsRequest(HttpRequest):
+    
+    ACTION = 'zone_settings'
+    METHOD = 'POST'
+    REQUIRED_PARAMS = {
+        'z': str,
+    }
+    OPTIONAL_PARAMS = {}
+    PARAM_MAP = {
+        'zone': 'z',
+    }
+    
+    def pre_process(self, params):
+        return params
+    
+    def post_process(self, data):
+        return data.get('result', {}).get('objs', [])
+
+api_request = ZoneSettingsRequest
 
 '''
 

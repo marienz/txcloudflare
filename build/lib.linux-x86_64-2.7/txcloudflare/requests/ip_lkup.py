@@ -18,23 +18,36 @@
 
 '''
 
-__version__ = '1.0'
+'''
 
-__all__ = [
-    'errors',
-    'parse',
-    'request',
-    'requests',
-    'transport',
-]
+    Check the threat level of an IP. See:
+    
+    http://www.cloudflare.com/docs/client-api.html#s3.6
 
-from transport import CloudFlareClientTransport
+'''
 
-def client_api(email, token):
-    return CloudFlareClientTransport(email, token)
+from txcloudflare.request import HttpRequest
+from txcloudflare.errors import RequestValidationException
 
-#def host_api(email, token):
-#    return 'coming soon?! maybe'
+class IpThreatRequest(HttpRequest):
+    
+    ACTION = 'ip_lkup'
+    METHOD = 'POST'
+    REQUIRED_PARAMS = {
+        'ip': str,
+    }
+    OPTIONAL_PARAMS = {}
+    PARAM_MAP = {
+        'ip': 'ip',
+    }
+    
+    def pre_process(self, params):
+        return params
+    
+    def post_process(self, data):
+        return data
+
+api_request = IpThreatRequest
 
 '''
 
