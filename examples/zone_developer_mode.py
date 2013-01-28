@@ -65,7 +65,7 @@ domain_name = os.environ.get('TXCFDOMAIN', '')
 
 if __name__ == '__main__':
     print '> setting developer for zone: {0}'.format(domain_name)
-    cloudflare = txcloudflare.api(email_address, api_token)
+    cloudflare = txcloudflare.client_api(email_address, api_token)
     cloudflare.devmode(zone=domain_name, on=True).addCallback(got_response).addErrback(got_error)
     reactor.run()
 

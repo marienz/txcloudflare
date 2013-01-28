@@ -21,9 +21,9 @@
 
 '''
 
-    Trivial example of how to list all zones. See:
+    Trivial example of how to purge the cache for a single file in a zone. See:
     
-    http://www.cloudflare.com/docs/client-api.html#s3.2
+    http://www.cloudflare.com/docs/client-api.html#s4.5
 
 '''
 
@@ -46,8 +46,8 @@ def got_response(response):
         'response' is a txcloudflare.response.Response() instance.
     '''
     print '< got a response'
-    for d in response.data:
-        print d['zone_name']
+    for k,v in response.data.items():
+        print k, '->', v
     reactor.stop()
 
 def got_error(error):
@@ -61,11 +61,13 @@ def got_error(error):
 
 email_address = os.environ.get('TXCFEMAIL', '')
 api_token = os.environ.get('TXCFAPI', '')
+domain_name = os.environ.get('TXCFDOMAIN', '')
 
 if __name__ == '__main__':
-    print '> listing all zones'
+    some_url = 'http://{0}/some-file.html'.format(domain_name)
+    print '> purging all cache for file: {0}'.format(some_url)
     cloudflare = txcloudflare.client_api(email_address, api_token)
-    cloudflare.zone_load_multi().addCallback(got_response).addErrback(got_error)
+    cloudflare.zone_file_purge(zone=domain_name, url=some_url).addCallback(got_response).addErrback(got_error)
     reactor.run()
 
 '''

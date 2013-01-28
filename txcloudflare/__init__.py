@@ -27,10 +27,10 @@ __all__ = [
     'requests',
 ]
 
-from transport import CloudFlareTransport
+from transport import CloudFlareClientTransport
 
-def api(email, token):
-    return CloudFlareTransport(email, token)
+def client_api(email, token):
+    return CloudFlareClientTransport(email, token)
 
 '''
 

@@ -65,7 +65,7 @@ domain_name = os.environ.get('TXCFDOMAIN', '')
 
 if __name__ == '__main__':
     print '> listing all records for zone: {0}'.format(domain_name)
-    cloudflare = txcloudflare.api(email_address, api_token)
+    cloudflare = txcloudflare.client_api(email_address, api_token)
     cloudflare.rec_load_all(zone=domain_name).addCallback(got_response).addErrback(got_error)
     reactor.run()
 

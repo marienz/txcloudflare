@@ -65,7 +65,7 @@ domain_name = os.environ.get('TXCFDOMAIN', '')
 
 if __name__ == '__main__':
     print '> getting recent ips for zone: {0}'.format(domain_name)
-    cloudflare = txcloudflare.api(email_address, api_token)
+    cloudflare = txcloudflare.client_api(email_address, api_token)
     cloudflare.zone_ips(zone=domain_name, hours=24, filter_by='regular').addCallback(got_response).addErrback(got_error)
     reactor.run()
 

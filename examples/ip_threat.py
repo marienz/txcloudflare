@@ -65,7 +65,7 @@ api_token = os.environ.get('TXCFAPI', '')
 if __name__ == '__main__':
     ip = '8.8.8.8'
     print '> checking threat level of an ip: {0}'.format(ip)
-    cloudflare = txcloudflare.api(email_address, api_token)
+    cloudflare = txcloudflare.client_api(email_address, api_token)
     cloudflare.ip_lkup(ip=ip).addCallback(got_response).addErrback(got_error)
     reactor.run()
 

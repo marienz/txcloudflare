@@ -27,27 +27,10 @@
 from urlparse import urlunsplit
 
 from twisted.internet import defer
-from twisted.internet.protocol import Protocol
 
-from txcloudflare.parse import Parser, Response
+from txcloudflare.transport import HttpStreamReceiver
+from txcloudflare.parse import Response
 from txcloudflare.errors import RequestValidationException
-
-class HttpStreamReceiver(Protocol):
-    
-    def __init__(self, response, d):
-        self.response = response
-        self.d = d
-    
-    def dataReceived(self, data):
-        self.response.raw_data += data
-    
-    def connectionLost(self, reason):
-        self.response = Parser(self.response).get_parsed()
-        self.response.data = self.response.request.post_process(self.response.data)
-        if self.response.error:
-            self.d.errback('{0} - {1}'.format(self.response.error_code, self.response.error_message))
-        else:
-            self.d.callback(self.response)
 
 class HttpRequest(object):
     '''

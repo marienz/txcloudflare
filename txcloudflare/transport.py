@@ -30,13 +30,14 @@ from urlparse import urlsplit
 from collections import OrderedDict
 
 from zope.interface import implements
-from twisted.internet import reactor
+from twisted.internet import reactor, protocol
 from twisted.web.client import Agent
 from twisted.web.iweb import IBodyProducer
 from twisted.web.http_headers import Headers
 from twisted.internet.defer import succeed
 
 import txcloudflare, txcloudflare.requests
+from txcloudflare.parse import Parser
 from txcloudflare.errors import TransportException
 
 # try and import the verifying SSL context from txverifyssl
@@ -153,10 +154,32 @@ class HttpStreamProducer(object):
     def stopProducing(self):
         pass
 
-class CloudFlareTransport(HttpTransport):
+class HttpStreamReceiver(protocol.Protocol):
     '''
     
-        CloudFlare specific transport.
+        Receives the downstream data from an HTTP connection.
+    
+    '''
+    
+    def __init__(self, response, d):
+        self.response = response
+        self.d = d
+    
+    def dataReceived(self, data):
+        self.response.raw_data += data
+    
+    def connectionLost(self, reason):
+        self.response = Parser(self.response).get_parsed()
+        self.response.data = self.response.request.post_process(self.response.data)
+        if self.response.error:
+            self.d.errback('{0} - {1}'.format(self.response.error_code, self.response.error_message))
+        else:
+            self.d.callback(self.response)
+
+class CloudFlareClientTransport(HttpTransport):
+    '''
+    
+        CloudFlare client API specific transport.
     
     '''
     
