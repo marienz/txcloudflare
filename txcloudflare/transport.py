@@ -27,7 +27,6 @@
 
 from urllib import urlencode
 from urlparse import urlsplit
-from collections import OrderedDict
 
 from zope.interface import implements
 from twisted.internet import reactor, protocol
@@ -119,7 +118,7 @@ class HttpTransport(TransportBase):
         #print 'url:', url
         #print 'data:', post_data
         
-        producer = HttpStreamProducer(urlencode(OrderedDict(post_data))) if post_data else None
+        producer = HttpStreamProducer(urlencode(post_data)) if post_data else None
         request_headers = {'User-Agent': [self.UA + ' v' + txcloudflare.__version__]}
         if method == self.METHOD_POST:
             request_headers['Content-Type'] = ['application/x-www-form-urlencoded']
